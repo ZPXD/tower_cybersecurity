@@ -1,80 +1,51 @@
 import os
 import sys
 
-
 '''
 What, why
-
-python3 
 '''
 
-'''
-To be developed.
-'''
-
-sshd_config_file = '/etc/ssh/sshd_config'
-sshd_config_lines = open(sshd_config_file).readlines()
-
-checked_items = []
-checked_lines = []
-for line in sshd_config_lines:
-
-	# Key
-
-	item = 'PubkeyAuthentication'
-	if item in line and not item in checked_items:
-		line = 'PubkeyAuthentication yes' + '\n'
-		checked_lines.append(line)
-		checked_items.append(line)
-
-	# Root
-
-	item = 'PermitRootLogin'
-	if item in line and not item in checked_items:
-		line = 'PermitRootLogin no' + '\n'
-		checked_lines.append(line)
-		checked_items.append(line)
-
-	# Passwords
-
-	item = 'PasswordAuthentication'
-	if item in line and not item in checked_items:
-		line = 'PasswordAuthentication no' + '\n'
-		checked_lines.append(line)
-		checked_items.append(line)
-
-	# Check
-
-	#item = 'PermitEmptyPasswords'
-	#if item in line and not item in checked_items:
-	#	line = 'PermitEmptyPasswords no'
-	#	checked_lines.append(line)
-	#	checked_items.append(line)
-
-with open(sshd_config_file, 'w+') as f:
-	f.writelines(checked_lines)
-
-with open(sshd_config_file+'_backup', 'w+') as f:
-	f.writelines([l + '\n' for l in sshd_config_lines])
+sudoers_location = '/etc/sudoers'
 
 
+def update_sudoers(username, action):
+	'''
+	Adds one line to Linux Ubuntu /etc/sudoers file - or removes it.
+	Line allows user to use sudo without password
+	(if he or she is in the sudo group)
+	or deny it.
+	'''
 
-# Na potem do rozważenia:
+	no_passwd_line = "{} ALL=(ALL) NOPASSWD:ALL".format(username)
 
-# Pomysł Mist'a:
+	# Allow no password sudo.
 
-# PermitRootLogin no
-# LoginGraceTime 20
-# PasswordAuthentication no
-# PermitEmptyPasswords no
-# ChallengeResponseAuthentication no
-# KerberosAuthentication no
-# GSSAPIAuthentication no
-# X11Forwarding no
-# ClientAliveInterval  360
-# ClientAliveCountMax 10
+	if int(action) != 0: # Allow.		
+		os.systemd('echo "{no_passwd_line}" >> {sudoers_location}'.format(no_passwd_line, sudoers_location))
+		print()
+		print('Now user {} can use sudo without a password if he or she is in the sudo group.'.format(username))
 
-# Inne:
+	# Deny no password sudo.
 
-# PermitTunnel
- 
+	else:
+		sudoers_lines = open(sudoers_location).readlines()
+		sudoers = [l for l in sudoers_lines if not l == user_line]
+		with open(sshd_config_file, 'w+') as f:
+			f.writelines(sudoers_lines)
+		print()
+		print('Now user {} cant use sudo without a password if he or she is in the sudo group.'.format(username))
+
+if __name__ == '__main__':
+	if len(sys.argv) == 3:
+		username = sys.argv[1]
+		action = sys.argv[2]
+		set_sudoers(username, action)
+	else:
+		print('No username or no action picked.')
+		print('Add two arguments: <username> <int>')
+		print()
+		print('1. Deny no password sudo (0):')
+		print('python3 prepare_sudoers.py 0')
+		print()
+		print('2. Allow no password sudo (1):')
+		print('python3 prepare_sudoers.py 1')
