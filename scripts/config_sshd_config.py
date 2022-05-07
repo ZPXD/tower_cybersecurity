@@ -4,6 +4,8 @@ import sys
 
 '''
 What, why
+
+python3 
 '''
 
 '''
@@ -21,7 +23,7 @@ for line in sshd_config_lines:
 
 	item = 'PubkeyAuthentication'
 	if item in line and not item in checked_items:
-		line = 'PubkeyAuthentication yes'
+		line = 'PubkeyAuthentication yes' + '\n'
 		checked_lines.append(line)
 		checked_items.append(line)
 
@@ -29,7 +31,7 @@ for line in sshd_config_lines:
 
 	item = 'PermitRootLogin'
 	if item in line and not item in checked_items:
-		line = 'PermitRootLogin no'
+		line = 'PermitRootLogin no' + '\n'
 		checked_lines.append(line)
 		checked_items.append(line)
 
@@ -37,7 +39,7 @@ for line in sshd_config_lines:
 
 	item = 'PasswordAuthentication'
 	if item in line and not item in checked_items:
-		line = 'PasswordAuthentication no'
+		line = 'PasswordAuthentication no' + '\n'
 		checked_lines.append(line)
 		checked_items.append(line)
 
@@ -53,7 +55,7 @@ with open(sshd_config_file, 'w+') as f:
 	f.writelines(checked_lines)
 
 with open(sshd_config_file+'_backup', 'w+') as f:
-	f.writelines(sshd_config_lines)
+	f.writelines([l + '\n' for l in sshd_config_lines])
 
 
 
