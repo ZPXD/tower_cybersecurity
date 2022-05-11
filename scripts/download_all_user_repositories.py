@@ -24,7 +24,7 @@ ZPXD, Łukasz Pintal.
 
 
 
-def download_all_github_repositories(github_user=None, backup_folder_name='backup')
+def download_all_github_repositories(github_user=None, backup_folder_name='backup'):
 	
 	# Enter GitHub user name. 
 	if github_user == None:
