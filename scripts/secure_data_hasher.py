@@ -5,6 +5,7 @@ import sys
 
 '''
 Protect files & data.
+
 Simple collection of hashing functions to secure files and data.
 1. Access your Fernet key, create it if it does not exist.
 2. Encrypts file
@@ -19,7 +20,7 @@ This is very basic set of tools. Dont depend on soily it to protect anything sup
 ZPXD, Łukasz Pintal.
 '''
 
-def create_unlock_key(key_name='.unlock.key'):
+def unlock_key(key_name='.unlock.key'):
 	'''
 	Figures out whether key exists or not. If not, creates. 
 	
@@ -50,7 +51,7 @@ def encrypt_file(file_path, key_name='.unlock.key'):
 	'''
 	Encrypts file.
 	'''
-	key = load_unlock_key(key_name)
+	key = unlock_key(key_name)
 	f = Fernet(key)
 	with open(file_path, "rb") as file:
 		file_data = file.read()
@@ -63,7 +64,7 @@ def decrypt_file(file_path, key_name='.unlock.key'):
 	'''
 	Decrypts file.
 	'''
-	key = load_unlock_key(key_name)
+	key = unlock_key(key_name)
 	f = Fernet(key)
 	with open(file_path, "rb") as file:
 		encrypted_data = file.read()
@@ -76,7 +77,7 @@ def get_file_data_and_decrypt(file_path, key_name='.unlock.key'):
 	'''
 	Opens and decrypts given file. Return decrypted file contents.
 	'''
-	key = load_unlock_key(key_name)
+	key = unlock_key(key_name)
 	f = Fernet(key)
 	with open(file_path, "rb") as file:
 		encrypted_data = file.read()
@@ -88,7 +89,7 @@ def save_encrypted_text(file_path, text, key_name='.unlock.key'):
 	'''
 	Encrypts text and saves it as a file.
 	'''
-	key = load_unlock_key(key_name)
+	key = unlock_key(key_name)
 	f = Fernet(key)
 	encrypted_data = f.encrypt(text)
 	with open(file_path, "wb") as file:
@@ -99,7 +100,7 @@ def encrypt_text(text, key_name='.unlock.key'):
 	'''
 	Encrypts text and returns it.
 	'''
-	key = load_unlock_key(key_name)
+	key = unlock_key(key_name)
 	f = Fernet(key)
 	encrypted_data = f.encrypt(text)
 	return encrypted_data
@@ -108,7 +109,7 @@ def decrypt_text(encrypted_text, key_name='.unlock.key'):
 	'''
 	Decrypts text and returns it.
 	'''
-	key = load_unlock_key(key_name)
+	key = unlock_key(key_name)
 	f = Fernet(key)
 	decrypted_data = f.decrypt(encrypted_text)
 	return decrypted_data
