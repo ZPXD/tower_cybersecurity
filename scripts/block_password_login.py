@@ -20,30 +20,33 @@ sshd_config_lines = open(sshd_config_file).readlines()
 checked_items = []
 checked_lines = []
 for line in sshd_config_lines:
-
+	
 	# Root Login
 
-	item = 'PermitRootLogin'
-	if item in line and not item in checked_items:
+	if 'PermitRootLogin' in line and not 'PermitRootLogin' in checked_items:
 		checked_lines.append(line)
 		line = 'PermitRootLogin no' + '\n'
-		checked_items.append(line)
+		checked_items.append('PermitRootLogin')
 
 	# Passwords
 
-	item = 'PasswordAuthentication'
-	if item in line and not item in checked_items:
+	elif 'PasswordAuthentication' in line and not 'PasswordAuthentication' in checked_items:
 		checked_lines.append(line)
 		line = 'PasswordAuthentication no' + '\n'
-		checked_items.append(line)
+		checked_items.append('PasswordAuthentication')
 
 	# Key
 
-	item = 'PubkeyAuthentication'
-	if item in line and not item in checked_items:
+	elif 'PubkeyAuthentication' in line and not 'PubkeyAuthentication' in checked_items:
 		checked_lines.append(line)
 		line = 'PubkeyAuthentication yes' + '\n'
-		checked_items.append(line)
+		checked_items.append('PubkeyAuthentication')
+		
+	# Others but no repetitions
+	elif:
+		checked_lines.append(line)
+		
+		
 
 	# Check
 
