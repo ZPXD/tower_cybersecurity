@@ -8,16 +8,23 @@ Wpis ten całkowicie nie wyczerpuje problemu, zagadnienie jest głębsze ... naw
 
 Proste uzycie zapytania SQL w ten sposób niesie za sobą ryzyko podatności na metodę ataku SQLInjection.
 `cursor.execute("select * form users where name = %s" % request.GET['name'])`
+
 `cursor.execute("SELECT admin FROM users WHERE username = '" + username + '");`
+
 `cursor.execute("SELECT admin FROM users WHERE username = '%s' % username);`
+
 `cursor.execute("SELECT admin FROM users WHERE username = '{}'".format(username));`
+
 `cursor.execute(f"SELECT admin FROM users WHERE username = '{username}'");`
 
 Ta sama funkcjonalność ale zabezpiecznona przed SQLInjection.
 
 `cursor.execute(model.users.__table__.select().where(model.users.name == request.GET['name']))`
+
 `cursor.execute("SELECT admin FROM users WHERE username = %s'", (username, ));`
+
 `cursor.execute("SELECT admin FROM users WHERE username = %(username)s", {'username': username});`
+
 
 Linki:
 
