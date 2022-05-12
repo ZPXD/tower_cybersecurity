@@ -21,7 +21,7 @@ def update_sudoers(username, action):
 	# Allow no password sudo.
 
 	if int(action) != 0: # Allow.		
-		os.systemd('echo "{no_passwd_line}" >> {sudoers_location}'.format(no_passwd_line, sudoers_location))
+		os.system('echo "{no_passwd_line}" >> {sudoers_location}'.format(no_passwd_line, sudoers_location))
 		print()
 		print('Now user {} can use sudo without a password if he or she is in the sudo group.'.format(username))
 
