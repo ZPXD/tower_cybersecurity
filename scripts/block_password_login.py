@@ -43,7 +43,7 @@ for line in sshd_config_lines:
 		checked_items.append('PubkeyAuthentication')
 		
 	# Others but no repetitions
-	elif:
+	else:
 		checked_lines.append(line)
 		
 		
