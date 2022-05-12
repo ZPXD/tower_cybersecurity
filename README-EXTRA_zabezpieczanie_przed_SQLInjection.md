@@ -6,7 +6,7 @@ Wykazuje jak łatwo jest napisać dziuerawą aplikacje i tego nie zauważyć.
 Wpis ten całkowicie nie wyczerpuje problemu, zagadnienie jest głębsze ... nawet przytoczone bezpieczne metody w pewnych sytuacjach mogą nie zapewnić bezpieczeństwa.
 
 
-Proste uzycie zapytania SQL w ten sposób niesie za sobą ryzyko podatności na metodę ataku SQLInjection.
+**Proste uzycie zapytania SQL w ten sposób niesie za sobą ryzyko podatności na metodę ataku SQLInjection.**
 `cursor.execute("select * form users where name = %s" % request.GET['name'])`
 
 `cursor.execute("SELECT admin FROM users WHERE username = '" + username + '");`
@@ -17,7 +17,7 @@ Proste uzycie zapytania SQL w ten sposób niesie za sobą ryzyko podatności na 
 
 `cursor.execute(f"SELECT admin FROM users WHERE username = '{username}'");`
 
-Ta sama funkcjonalność ale zabezpiecznona przed SQLInjection.
+*Ta sama funkcjonalność ale zabezpiecznona przed prostym uzyciem SQLInjection.*
 
 `cursor.execute(model.users.__table__.select().where(model.users.name == request.GET['name']))`
 
