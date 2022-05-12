@@ -60,8 +60,8 @@ with open(sshd_config_file, 'w+') as f:
 with open(sshd_config_file+'_backup', 'w+') as f:
 	f.writelines([l + '\n' for l in sshd_config_lines])
 
-os.systemd('systemctl restart ssh')
-os.systemd('systemctl restart sshd')
+os.system('systemctl restart ssh')
+os.system('systemctl restart sshd')
 
 
 # Na potem do rozważenia:
