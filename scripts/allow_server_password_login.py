@@ -48,19 +48,19 @@ def allow_server_password_login(allow=-1):
 			print('python3 allow_server_password_login.py 0')
 			print('python3 allow_server_password_login.py 1')
 
-		# Save sshd_config file with backup.
+	# Save sshd_config file with backup.
 
-		os.system('rm {}'.format(sshd_config_file))
-		with open(sshd_config_file, 'w+') as f:
-			f.write(lines)
+	os.system('rm {}'.format(sshd_config_file))
+	with open(sshd_config_file, 'w+') as f:
+		f.write(lines)
 
-		with open(sshd_config_file + '_backup', 'w+') as f:
-			f.write(lines)
+	with open(sshd_config_file + '_backup', 'w+') as f:
+		f.write(lines)
 
-		# Restart ssh services.
+	# Restart ssh services.
 
-		os.system('systemctl restart ssh')
-		os.system('systemctl restart sshd')
+	os.system('systemctl restart ssh')
+	os.system('systemctl restart sshd')
 
 
 if __name__ == '__main__':
