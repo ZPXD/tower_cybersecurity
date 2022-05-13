@@ -66,7 +66,7 @@ def allow_server_password_login(allow=-1):
 if __name__ == '__main__':
 	allow = -1
 	if len(sys.arvg) == 1:
-		allow = sys.arvg[1]
+		allow = int(sys.arvg[1])
 	allow_password_login(allow)
 
 
