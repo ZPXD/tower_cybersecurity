@@ -2,7 +2,12 @@ import os
 import sys
 
 '''
-What, why
+Allow user to use sudo without password (Good luck!).
+
+If you are still alive, see some most important commands and matetials on linux: http://linuxhot16challenge.info/
+
+
+ZPXD, Łukasz Pintal.
 '''
 
 sudoers_location = '/etc/sudoers'

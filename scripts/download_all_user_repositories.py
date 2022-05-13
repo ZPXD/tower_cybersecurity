@@ -41,9 +41,7 @@ def download_all_github_repositories(github_user=None, backup_folder_name='backu
 		os.system('git clone {} {}/{}'.format(repo_url, backup_folder_name, repo_name))
 
 	# Info.
-	print('{} repositories downloaded into: {}'.format(i, )
-
-
-
+	print('{} repositories downloaded into: {}'.format(i, ))
+	
 if __name__ == '__main__':
 	download_all_github_repositories(*sys.argv[1:])
