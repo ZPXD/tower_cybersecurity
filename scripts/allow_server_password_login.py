@@ -25,7 +25,7 @@ def allow_server_password_login(allow=-1):
 
 	lines = ""
 	for line in sshd_config_lines:
-		if allow == 0:
+		if allow == 1:
 			if 'PermitRootLogin' in line:
 				lines += 'PermitRootLogin yes' + '\n'
 			elif 'PasswordAuthentication' in line:
@@ -34,7 +34,7 @@ def allow_server_password_login(allow=-1):
 				lines += 'PubkeyAuthentication yes' + '\n'
 			else:
 				lines += line + '\n'
-		elif allow == 1:
+		elif allow == 0:
 			if 'PermitRootLogin' in line:
 				lines += 'PermitRootLogin no' + '\n'
 			elif 'PasswordAuthentication' in line:
