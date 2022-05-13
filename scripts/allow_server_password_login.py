@@ -67,7 +67,7 @@ if __name__ == '__main__':
 	allow = -1
 	if len(sys.argv) == 1:
 		allow = int(sys.argv[1])
-	allow_password_login(allow)
+	allow_server_password_login(allow)
 
 
 
