@@ -66,7 +66,8 @@ class Backup():
 		self.server_user = os.getlogin()
 
 	def install_prequisites(self):
-		pass
+		# if exists, dont install
+		os.system('sudo apt install zip')
 
 	def date(self):
 		'''
