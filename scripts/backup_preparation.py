@@ -191,7 +191,6 @@ class Backup():
 	def send(self, login=None, ip=None, key_contents=None, port=None):
 		pass
 		
-
 	def now(self):
 		'''
 		'''
@@ -201,8 +200,6 @@ class Backup():
 		self.make_backups()
 		self.install_prequisites()
 		self.zip_folder()
-
-
 
 
 if __name__ == '__main__':
