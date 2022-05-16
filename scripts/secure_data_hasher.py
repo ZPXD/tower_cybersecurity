@@ -20,6 +20,8 @@ This is very basic set of tools. Dont depend on soily it to protect anything sup
 ZPXD, Łukasz Pintal.
 '''
 
+
+
 def unlock_key(key_name='.unlock.key'):
 	'''
 	Figures out whether key exists or not. If not, creates. 
