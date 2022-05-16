@@ -42,14 +42,13 @@ class Backup():
 
 	# Resources.
 	backup_folders = [
-		# '/var/www',
-		# '/home/{}',
-		# '/etc/systemd/system',
-		# '/etc/nginx/',
-		# '/root',
-		# '/etc/sudoers',
-		# '/sshd_config',
-		'/home/lukasz/pykruter'
+		'/var/www',
+		'/home/{}',
+		'/etc/systemd/system',
+		'/etc/nginx/',
+		'/root',
+		'/etc/sudoers',
+		'/sshd_config',
 	]
 
 	backup_files = [
@@ -123,6 +122,8 @@ class Backup():
 		'''
 		os.mkdir(self.this_backup)
 		for folder in self.backup_folders:
+			if 'home/{}' in folder:
+				folder = folder.format(self.server_user)
 			try:
 				base = self.this_backup + '/' + folder.split('/')[-1]
 				backup_command = self.backup_folder_command.format(folder, base)
@@ -131,6 +132,8 @@ class Backup():
 			except Exception as e:
 				print(e)
 		for file in self.backup_files:
+			if 'home/{}' in folder:
+				folder = folder.format(self.server_user)
 			try:
 				base = self.this_backup + '/' + file.split('/')[-1]
 				backup_command = self.backup_file_command.format(file, base)
