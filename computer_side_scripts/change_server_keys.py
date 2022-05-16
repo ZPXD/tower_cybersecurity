@@ -3,7 +3,6 @@ import sys
 import platform
 import time
 from paramiko import SSHConfig
-from subprocess import Popen
 
 
 '''
