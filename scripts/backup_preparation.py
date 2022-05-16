@@ -111,6 +111,7 @@ class Backup():
 		if not 'historia' in os.listdir(self.backup_base):
 			os.mkdir(self.backup_history)
 		os.mkdir(self.this_backup)
+		os.mkdir(self.backup_base.format(self.server_user, self.backup_folder_name)
 
 	def make_backups(self):
 		'''
