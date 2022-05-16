@@ -184,7 +184,9 @@ class Backup():
 		self.get_paths()
 		self.move()
 		self.make_backups()
+		self.install_prequisites()
 		self.zip_folder()
+
 
 
 
