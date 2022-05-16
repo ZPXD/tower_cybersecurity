@@ -49,6 +49,7 @@ class Backup():
 		# '/root',
 		# '/etc/sudoers',
 		# '/sshd_config',
+		'/home/lukasz/pykruter'
 	]
 
 	backup_files = [
@@ -87,6 +88,8 @@ class Backup():
 		self.this_backup = self.backup_base + '/' + 'nowy' + '_' + self.date()
 		self.this_backup_name = self.this_backup.split('/')[-1]
 
+		self.create_backup_folders()
+
 		# LAST BACKUPS.
 		newest_backup = [f for f in os.listdir(self.backup_base) if f.startswith('nowy')]
 		if newest_backup:
@@ -102,6 +105,7 @@ class Backup():
 		else:
 			self.next_backup = ''
 			self.next_backup_name = ''
+			
 
 	def create_backup_folders(self):
 		'''
@@ -111,7 +115,6 @@ class Backup():
 		if not 'historia' in os.listdir(self.backup_base):
 			os.mkdir(self.backup_history)
 		os.mkdir(self.this_backup)
-		os.mkdir(self.backup_base.format(self.server_user, self.backup_folder_name)
 
 	def make_backups(self):
 		'''
@@ -169,7 +172,6 @@ class Backup():
 		'''
 		'''
 		self.get_paths()
-		self.create_backup_folders()
 		self.move()
 		self.make_backups()
 		self.zip_folder()
