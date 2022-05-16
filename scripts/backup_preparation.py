@@ -68,7 +68,7 @@ class Backup():
 		# if exists, dont install
 		os.system('sudo apt install zip')
 
-	def prepare_content_to_be_saved():
+	def prepare_content_to_be_saved(self):
 		temp_folders = []
 		for folder in self.backup_folders:
 			if '/home/{}' in folder:
