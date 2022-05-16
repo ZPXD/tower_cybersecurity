@@ -48,7 +48,7 @@ class Backup():
 		'/etc/nginx/',
 		'/root',
 		'/etc/sudoers',
-		'/sshd_config',
+		'/etc/ssh/sshd_config',
 	]
 
 	backup_files = [
@@ -67,6 +67,20 @@ class Backup():
 	def install_prequisites(self):
 		# if exists, dont install
 		os.system('sudo apt install zip')
+
+	def prepare_content_to_be_saved():
+		temp_folders = []
+		for folder in self.backup_folders:
+			if '/home/{}' in folder:
+				folder.format(self.server_user)
+			temp_folders.append(folder)
+		self.backup_folders = temp_folders
+		temp_files = []
+		for file in self.backup_files:
+			if '/home/{}' in file:
+				folder.format(self.server_user)
+			temp_files.append(folder)
+		self.backup_files = temp_files
 
 	def date(self):
 		'''
@@ -182,6 +196,7 @@ class Backup():
 		'''
 		'''
 		self.get_paths()
+		self.prepare_content_to_be_saved()
 		self.move()
 		self.make_backups()
 		self.install_prequisites()
