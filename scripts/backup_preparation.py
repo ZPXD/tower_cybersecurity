@@ -49,7 +49,6 @@ class Backup():
 		# '/root',
 		# '/etc/sudoers',
 		# '/sshd_config',
-		'/home/lukasz/pykruter'
 	]
 
 	backup_files = [
