@@ -1,6 +1,6 @@
 import os
 from datetime import datetime
-
+import sys
 
 
 '''
@@ -49,6 +49,7 @@ class Backup():
 		# '/root',
 		# '/etc/sudoers',
 		# '/sshd_config',
+		'/home/lukasz/pykruter'
 	]
 
 	backup_files = [
@@ -59,6 +60,7 @@ class Backup():
 
 	backup_packages = [
 	]
+
 
 	def __init__(self):
 		self.server_user = os.getlogin()
@@ -97,6 +99,7 @@ class Backup():
 		else:
 			self.newest_backup = ''
 			self.newest_backup_name = ''
+
 		next_backup = [f for f in os.listdir(self.backup_base) if f.startswith('kolejny')]
 		if next_backup:
 			self.next_backup = self.backup_base + '/' + next_backup[0]
@@ -104,7 +107,7 @@ class Backup():
 		else:
 			self.next_backup = ''
 			self.next_backup_name = ''
-			
+
 
 	def create_backup_folders(self):
 		'''
@@ -113,15 +116,16 @@ class Backup():
 			os.mkdir(self.backup_base)
 		if not 'historia' in os.listdir(self.backup_base):
 			os.mkdir(self.backup_history)
-		os.mkdir(self.this_backup)
 
 	def make_backups(self):
 		'''
 		'''
+		os.mkdir(self.this_backup)
 		for folder in self.backup_folders:
 			try:
 				base = self.this_backup + '/' + folder.split('/')[-1]
 				backup_command = self.backup_folder_command.format(folder, base)
+				print(backup_command)
 				os.system(backup_command)
 			except Exception as e:
 				print(e)
@@ -166,6 +170,9 @@ class Backup():
 		rm_command = 'rm -r {}'.format(self.this_backup)
 		os.system(rm_command)
 
+	def send(self, login=None, ip=None, key_contents=None, port=None):
+		pass
+		
 
 	def now(self):
 		'''
@@ -176,6 +183,27 @@ class Backup():
 		self.zip_folder()
 
 
+
 if __name__ == '__main__':
-	backup = Backup()
-	backup.now()
+
+	if len(sys.argv) > 1:
+		if '-l' in sys.argv:
+			i = sys.argv.index('-l')
+			login = sys.argv[i+1]
+		if '-ip' in sys.argv:
+			i = sys.argv.index('-ip')
+			ip = sys.argv[i+1]
+		if '-key' in sys.argv:
+			i = sys.argv.index('-key')
+			key = sys.argv[i+1]
+			key_contents = open(key).read()
+		if '-p' in sys.argv:
+			i = sys.argv.index('-p')
+			port = sys.argv[i+1] 
+
+		#print(login, ip, key_contents, port)
+		backup = Backup()
+		backup.send(login, ip, key_contents, port)
+	else:
+		backup = Backup()
+		backup.now()
