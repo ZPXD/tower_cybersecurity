@@ -55,7 +55,7 @@ def allow_server_password_login(allow=-1):
 		f.write(lines)
 
 	with open(sshd_config_file + '_backup', 'w+') as f:
-		f.write(lines)
+		f.write(sshd_config_lines)
 
 	# Restart ssh services.
 
