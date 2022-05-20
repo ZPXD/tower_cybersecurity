@@ -1,9 +1,11 @@
 import os
 import json
+import time
 import string
+import subprocess
 from datetime import datetime
-
-
+import pandas as pd
+from dateutil import parser
 
 '''
 Gathers all logs into one place.
@@ -16,29 +18,27 @@ To be developed:
 - time intervals
 - dedicated parsers for each log
 - scripts for log content change vulnerability
-- log backups
 
-
-ZPXD, Łukasz Pintal.
+ZPXD, ukasz Pintal.
 '''
 
 
 logs_gathering = {
 
 	'file_logs' : {
-		
-		'apt_history' : {'path' : '/var/log/apt/history.log', },
-		'apt_term' : 	{'path' : '/var/log/apt/term.log',},
-		'apt_eipp' : 	{'path' : '/var/log/apt/eipp.log',},
-		'auth' : 		{'path' : '/var/log/auth.log',},
-		'btmt' : 		{'path' : '/var/log/btmt',},
-		'dmesgs' :	 	{'path' : '/var/log/dmesgs',},
-		'lastlog' : 	{'path' : '/var/log/lastlog',},
-		'syslog' : 		{'path' : '/var/log/syslog',},
-		'dmesg' : 		{'path' : '/var/log/dmesg',},
+		# 'apt_history' : {'path' : '/var/log/apt/history.log', },
+		# 'apt_term' : 	  {'path' : '/var/log/apt/term.log',},
+		# 'apt_eipp' : 	  {'path' : '/var/log/apt/eipp.log',},
+		# 'auth' : 		  {'path' : '/var/log/auth.log',},
+		# 'btmt' : 		  {'path' : '/var/log/btmt',},
+		# 'dmesgs' :	  {'path' : '/var/log/dmesgs',},
+		# 'lastlog' : 	  {'path' : '/var/log/lastlog',},
+		'syslog' : 	  {'path' : '/var/log/syslog',},
+		# 'check' : 	  {'path' : '/home/lukasz/logs_test/level2'},
+		# 'dmesg' : 		{'path' : '/var/log/dmesg',},
 		'nginx_access': {'path' : '/var/log/nginx/access.log',},
-		'nginx_error' : {'path' : '/var/log/nginx/error.log',},
-		'exim4' : 		{'path' : '/var/log/exim4/mainlog',},
+		# 'nginx_error' : {'path' : '/var/log/nginx/error.log',},
+		# 'exim4' : 		{'path' : '/var/log/exim4/mainlog',},
 		# TBD ...
 	},
 
@@ -59,38 +59,97 @@ logs_gathering = {
 		'/var/run',
 	],
 
-	'files_to_watch' : [
-		'/home/{}/.ssh/config',
-	],
-
-	'folders_to_watch' : [
-		'/home/{}/lukasz'
-	],
-
-	'files_in_folders_to_watch' : [
-		'/home/{}/.ssh/'
-	],
-
-	'meta' : {
-
+	'files_to_watch' : {
+		'check1' : 		{'path' : '/home/lukasz/logs_test/logs_test2/xx'},
 	},
 
+	'folders_to_watch' : {
+		'check2' : 		{'path' : '/home/lukasz/logs_test/logs_test2b'},
+	},
+
+	'files_in_folders_to_watch' : {
+		'check3' : 		{'path' : '/home/lukasz/logs_test/logs_test2/logs_test3'},
+	},
+
+	'meta' : {
+		'',
+		'',
+		'',
+	},
 }
 
+# Watcher blueprint.
+file_watcher = '''
+import sys
+import os
+import threading
+sys.path.insert(1, os.path.join(sys.path[0], '..'))
+from logs_gathering import LogsGathering
+
+def i_see_my_files(file_path, name):
+	LOG = LogsGathering()
+	yeah_echo = 0
+	while True:
+		if os.path.exists(file_path):
+			yeah = os.stat(file_path).st_mtime
+			if yeah_echo != yeah:
+				yeah_echo = yeah
+				LOG.do(name, file_path)
+		else:
+			try:
+				pid = str(open(file_path).readlines()[-1][1:])
+				os.system('rm {}/{}_guardian.py'.format(LOG.guardians_folder_path, name))
+				os.system('kill -9 {}'.format(pid))
+			except:
+				pass
+
+'''
+
+file_watcher_reviver = '''
+import sys
+import os
+import threading
+sys.path.insert(1, os.path.join(sys.path[0], '..'))
+from logs_gathering import LogsGathering
+
+def guardians():
+	while True:
+		from logs_gathering import LogsGathering
+		LOG = LogsGathering()
+		LOG.things_to_watch_list()
+		for name, file_path in LOG.things_to_watch.items():
+			file_path = file_path['path']
+			guardian_path = LOG.guardians_folder_path + '/' + name + '_guardian.py' 
+			if os.path.exists(file_path) and not os.path.exists(guardian_path):
+				LOG.create_guardian(name, file_path)
+
+centurion = threading.Thread(target=guardians)
+centurion.start()
+'''
+
+# Guardian blueprint.
+template = '''
+guardian = threading.Thread(target=i_see_my_files, args=['{}', '{}'])
+guardian.start()
+'''
 
 class LogsGathering():
 
 	place_for_logs_folder = '/home/{}'
 	logs_gathering_file = 'logs_gathering.json'
 	logs_folder = 'logs_gathering'
+
+	guardians_folder = 'guardians'
 	i_see_my_files = 'i_see_my_files.py'
-	guardians_refresh = 'guardians_refresh.py'
+	guardians_revive = 'guardians_revive.py'
 	
-	def __init__(self, logs_gathering):
+	def __init__(self, logs_gathering=None):
 		self.place_for_logs_folder = self.place_for_logs_folder.format(os.getlogin())
-		self.logs_folder_path = os.path.join(self.place_for_logs_folder, self.logs_folder)
-		self.logs_gathering_file_path = os.path.join(self.logs_folder_path, self.logs_gathering_file)
+		self.logs_folder_path = self.place_for_logs_folder + '/' + self.logs_folder
+		self.guardians_folder_path = self.logs_folder_path + '/' + self.guardians_folder
+		self.logs_gathering_file_path = self.logs_folder_path + '/' + self.logs_gathering_file
 		self.logs_gathering = logs_gathering
+		self.things_to_watch = None
 
 	
 	# Preperation.
@@ -117,6 +176,8 @@ class LogsGathering():
 		if not self.logs_folder in os.listdir(self.place_for_logs_folder):
 			os.mkdir(self.logs_folder_path)
 		log_folders = os.listdir(self.logs_folder_path)
+		if not 'guardians' in log_folders:
+			os.mkdir(self.guardians_folder_path)
 		for k, v in self.logs_gathering['file_logs'].items():
 			if not k in log_folders:
 				save_path = os.path.join(self.logs_folder_path, k)
@@ -130,6 +191,25 @@ class LogsGathering():
 				save_path = os.path.join(self.logs_folder_path, k, 'history')
 				os.mkdir(save_path)
 
+	def things_to_watch_list(self):
+		self.things_to_watch = {}
+		for k, v in logs_gathering['file_logs'].items():
+			self.things_to_watch[k] = v
+		for k, v in logs_gathering['files_to_watch'].items():
+			self.things_to_watch[k] = v
+		for k, v in logs_gathering['folders_to_watch'].items():
+			self.things_to_watch[k] = v
+		for k, v in logs_gathering['files_in_folders_to_watch'].items():
+			folder_path = v['path']
+			folder_files = self.get_all_folder_files(folder_path)
+			for f in folder_files:
+				file_name = f.split('/')[-1].split('.')[0]
+				if os.path.exists(f):
+					self.things_to_watch[file_name] = {'path': f}
+				else:
+					pid = str(open(f).readlines()[-1][1:])
+					os.system('rm {}/{}_guardian.py'.format(LOG.guardians_folder_path, file_name))
+					os.system('kill -9 {}'.format(pid))
 
 	# Config.
 
@@ -269,15 +349,106 @@ class LogsGathering():
 			command = 'cat {} > {}'.format(log['path'], save_as)
 			os.system(command)
 
-	def 
-
-
-	def guardian(self):
+	def syslog(self):
 		'''
 		.
 		'''
+		df_path = '/home/lukasz/logs_gathering/syslog/syslog.csv'
+		columns = ['date', 'program', 'runner', 'info']
+		if not os.path.exists(df_path):
+			log = open('/var/log/syslog').readlines()
+			data = []
+			for line in log:
+				elements = line.split()
+				date_string = ' '.join(elements[:3])
+				date = parser.parse(date_string)
+				data_row = {
+					'date' : date,
+					'program' : elements[3],
+					'runner' : elements[4],
+					'info' : ' '.join(elements[5:]),
+				}
+				data.append(data_row)
+			df = pd.DataFrame(data, columns=columns)
+			df = df.loc[:len(df)-2, :]
+			df.to_csv(df_path, index=False)
+		else:
+			df = pd.read_csv(df_path)
+			last_date = df.loc[len(df)-1, 'date']
+			last_date = parser.parse(date_string)
+			log = open('/var/log/syslog').readlines()
+			data = []
+			for line in log[::-1]:
+				elements = line.split()
+				date_string = ' '.join(elements[:3])
+				date = syslog_date_to_timestamp(date_string)
+				if date > last_date:
+					data_row = {
+						'date' : date,
+						'program' : elements[3],
+						'runner' : elements[4],
+						'info' : ''.join(elements[5:]),
+					}
+					data.append(data_row)
+			df2 = pd.DataFrame(data, columns=columns)
+			df = pd.concat([df, df2], axis=0, ignore_index=True)
+			df.to_csv(df_path, index=False)
 
-		os.system('python3 {}'.format(self.guardians))
+	def do(self, log_name, path):
+		'''
+		.
+		'''
+		if log_name == 'syslog':
+			self.syslog()
+
+
+
+		# TEMP CHECKER.
+		check_name = 'checkcheckcheck.txt'
+		check = self.logs_folder_path + '/' + check_name
+		string = '{:20} - {}\n'.format(log_name, self.date())
+		if check in os.listdir():
+			with open(check, 'w+') as f:
+				f.write(string)
+		else:
+			with open(check, 'a+') as f:
+				f.write(string)
+
+
+	def create_guardians(self):
+		for name, info in logs_gathering['file_logs'].items():
+			self.create_guardian(name, info['path'])
+
+	def create_guardian(self, name, file_path):
+		if os.path.exists(file_path):
+			script = file_watcher + template.format(file_path, name)
+			file_path = self.guardians_folder_path + '/' + name + '_guardian.py'
+			with open(file_path, 'w') as f:
+				f.write(script)
+			time.sleep(0.1)
+			command = 'python3 {}'.format(file_path)
+			p = subprocess.Popen(command.split())
+			pid = p.pid
+			time.sleep(0.1)
+			with open(file_path, 'a+') as f:
+				f.write('#{}'.format(pid))
+
+	def create_reviver(self):
+		'''
+		Create watcher file, starts it 
+		and removes last one (active) after 1 second.
+		'''
+		reviver_path = self.guardians_folder_path + '/' + self.guardians_revive
+		with open(reviver_path, 'w') as f:
+			f.write(file_watcher_reviver)
+		time.sleep(0.1)
+		command = 'python3 {}'.format(reviver_path)
+		p = subprocess.Popen(command.split())
+		pid = p.pid
+
+
+
+
 
 	def run_script_on_background(self, script_path, arg_str=''):
 		'''
@@ -329,9 +500,10 @@ class LogsGathering():
 			os.system('sudo systemctl daemon-reload')
 			os.system('sudo systemctl enable {}'.format(file_name))
 
-# To do:
+# To do.
 # - history/history
 # - dla guardianow - sprawdzanie procesow po usunieciu pliku jeszcze
+
 
 if __name__ == "__main__":
 	LOG = LogsGathering(logs_gathering)
@@ -342,5 +514,14 @@ if __name__ == "__main__":
 
 	# Żyjący program robimy, bez default configa
 	#LOG.load_logs_gathering_config_from_file()
-	LOG.search_add_new_logs(ask=True) # ...
-	LOG.quick_logs_gatherer()
+	
+	# 
+	#LOG.search_add_new_logs(ask=True) # ...
+	#LOG.quick_logs_gatherer()
+
+	# Guardians:
+	LOG.things_to_watch_list()
+	LOG.create_guardians()
+	LOG.create_reviver()
+	print(LOG.things_to_watch)
+	
