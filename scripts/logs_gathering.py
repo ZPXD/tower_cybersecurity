@@ -4,8 +4,12 @@ import time
 import string
 import subprocess
 from datetime import datetime
+<<<<<<< HEAD
+
+=======
 import pandas as pd
 from dateutil import parser
+>>>>>>> 68bf27564d1b9984a824535a016ad03bed32ce04
 
 '''
 Gathers all logs into one place.
@@ -18,6 +22,10 @@ To be developed:
 - time intervals
 - dedicated parsers for each log
 - scripts for log content change vulnerability
+<<<<<<< HEAD
+
+=======
+>>>>>>> 68bf27564d1b9984a824535a016ad03bed32ce04
 
 ZPXD, ukasz Pintal.
 '''
@@ -26,6 +34,20 @@ ZPXD, ukasz Pintal.
 logs_gathering = {
 
 	'file_logs' : {
+<<<<<<< HEAD
+		
+		# 'apt_history' : {'path' : '/var/log/apt/history.log', },
+		# 'apt_term' : 	{'path' : '/var/log/apt/term.log',},
+		# 'apt_eipp' : 	{'path' : '/var/log/apt/eipp.log',},
+		# 'auth' : 		{'path' : '/var/log/auth.log',},
+		# 'btmt' : 		{'path' : '/var/log/btmt',},
+		# 'dmesgs' :	 	{'path' : '/var/log/dmesgs',},
+		# 'lastlog' : 	{'path' : '/var/log/lastlog',},
+		#'syslog' : 		{'path' : '/var/log/syslog',},
+		'check' : 		{'path' : '/home/lukasz/logs_test/level2',},
+		# 'dmesg' : 		{'path' : '/var/log/dmesg',},
+		# 'nginx_access': {'path' : '/var/log/nginx/access.log',},
+=======
 		# 'apt_history' : {'path' : '/var/log/apt/history.log', },
 		# 'apt_term' : 	  {'path' : '/var/log/apt/term.log',},
 		# 'apt_eipp' : 	  {'path' : '/var/log/apt/eipp.log',},
@@ -37,6 +59,7 @@ logs_gathering = {
 		# 'check' : 	  {'path' : '/home/lukasz/logs_test/level2'},
 		# 'dmesg' : 		{'path' : '/var/log/dmesg',},
 		'nginx_access': {'path' : '/var/log/nginx/access.log',},
+>>>>>>> 68bf27564d1b9984a824535a016ad03bed32ce04
 		# 'nginx_error' : {'path' : '/var/log/nginx/error.log',},
 		# 'exim4' : 		{'path' : '/var/log/exim4/mainlog',},
 		# TBD ...
@@ -60,6 +83,17 @@ logs_gathering = {
 	],
 
 	'files_to_watch' : {
+<<<<<<< HEAD
+		'check1' : 		{'path' : '/home/lukasz/logs_test/log_test2/xx'},
+	},
+
+	'folders_to_watch' : {
+		'check2' : 		{'path' : '/home/lukasz/logs_test/log_test2b'},
+	},
+
+	'files_in_folders_to_watch' : {
+		'check3' : 		{'path' : '/home/lukasz/logs_test/log_test2/log_test3/3'},
+=======
 		'check1' : 		{'path' : '/home/lukasz/logs_test/logs_test2/xx'},
 	},
 
@@ -69,6 +103,7 @@ logs_gathering = {
 
 	'files_in_folders_to_watch' : {
 		'check3' : 		{'path' : '/home/lukasz/logs_test/logs_test2/logs_test3'},
+>>>>>>> 68bf27564d1b9984a824535a016ad03bed32ce04
 	},
 
 	'meta' : {
@@ -90,12 +125,23 @@ def i_see_my_files(file_path, name):
 	LOG = LogsGathering()
 	yeah_echo = 0
 	while True:
+<<<<<<< HEAD
+		print(file_path)
+		print(os.path.exists(file_path))
 		if os.path.exists(file_path):
+			print(os.path.exists(file_path))
+=======
+		if os.path.exists(file_path):
+>>>>>>> 68bf27564d1b9984a824535a016ad03bed32ce04
 			yeah = os.stat(file_path).st_mtime
 			if yeah_echo != yeah:
 				yeah_echo = yeah
 				LOG.do(name, file_path)
 		else:
+<<<<<<< HEAD
+			os.system('rm {}/{}_guardian.py'.format(LOG.guardians_folder_path, name))
+'''
+=======
 			try:
 				pid = str(open(file_path).readlines()[-1][1:])
 				os.system('rm {}/{}_guardian.py'.format(LOG.guardians_folder_path, name))
@@ -105,6 +151,7 @@ def i_see_my_files(file_path, name):
 
 '''
 
+>>>>>>> 68bf27564d1b9984a824535a016ad03bed32ce04
 file_watcher_reviver = '''
 import sys
 import os
@@ -190,6 +237,10 @@ class LogsGathering():
 				os.mkdir(save_path)
 				save_path = os.path.join(self.logs_folder_path, k, 'history')
 				os.mkdir(save_path)
+				
+	def things_to_watch_list(self):
+		self.things_to_watch =  dict(logs_gathering['file_logs'], **logs_gathering['files_to_watch'], **logs_gathering['folders_to_watch'], **logs_gathering['files_in_folders_to_watch'])
+		
 
 	def things_to_watch_list(self):
 		self.things_to_watch = {}
@@ -349,6 +400,20 @@ class LogsGathering():
 			command = 'cat {} > {}'.format(log['path'], save_as)
 			os.system(command)
 
+<<<<<<< HEAD
+	def do(self, file_name, path):
+		'''
+		.
+		'''
+		check_name = 'checkcheckcheck.txt'
+		check = self.logs_folder_path + '/' + check_name
+		if check in os.listdir():
+			with open(check, 'w+') as f:
+				f.write(self.date())
+		else:
+			with open(check, 'a+') as f:
+				f.write(self.date())
+=======
 	def syslog(self):
 		'''
 		.
@@ -414,24 +479,38 @@ class LogsGathering():
 			with open(check, 'a+') as f:
 				f.write(string)
 
+>>>>>>> 68bf27564d1b9984a824535a016ad03bed32ce04
 
 	def create_guardians(self):
 		for name, info in logs_gathering['file_logs'].items():
 			self.create_guardian(name, info['path'])
 
 	def create_guardian(self, name, file_path):
+<<<<<<< HEAD
+		print(name, file_path,)
+		print(os.path.exists(file_path))
 		if os.path.exists(file_path):
 			script = file_watcher + template.format(file_path, name)
+			print(name, file_path)
+=======
+		if os.path.exists(file_path):
+			script = file_watcher + template.format(file_path, name)
+>>>>>>> 68bf27564d1b9984a824535a016ad03bed32ce04
 			file_path = self.guardians_folder_path + '/' + name + '_guardian.py'
 			with open(file_path, 'w') as f:
 				f.write(script)
 			time.sleep(0.1)
+<<<<<<< HEAD
+			os.system('python3 {}'.format(file_path))
+			time.sleep(0.1)
+=======
 			command = 'python3 {}'.format(file_path)
 			p = subprocess.Popen(command.split())
 			pid = p.pid
 			time.sleep(0.1)
 			with open(file_path, 'a+') as f:
 				f.write('#{}'.format(pid))
+>>>>>>> 68bf27564d1b9984a824535a016ad03bed32ce04
 
 	def create_reviver(self):
 		'''
@@ -442,6 +521,10 @@ class LogsGathering():
 		with open(reviver_path, 'w') as f:
 			f.write(file_watcher_reviver)
 		time.sleep(0.1)
+<<<<<<< HEAD
+		os.system('python3 {}'.format(reviver_path))
+		time.sleep(0.1)
+=======
 		command = 'python3 {}'.format(reviver_path)
 		p = subprocess.Popen(command.split())
 		pid = p.pid
@@ -449,6 +532,7 @@ class LogsGathering():
 
 
 
+>>>>>>> 68bf27564d1b9984a824535a016ad03bed32ce04
 
 	def run_script_on_background(self, script_path, arg_str=''):
 		'''
@@ -505,6 +589,10 @@ class LogsGathering():
 # - dla guardianow - sprawdzanie procesow po usunieciu pliku jeszcze
 
 
+<<<<<<< HEAD
+
+=======
+>>>>>>> 68bf27564d1b9984a824535a016ad03bed32ce04
 if __name__ == "__main__":
 	LOG = LogsGathering(logs_gathering)
 
@@ -514,14 +602,22 @@ if __name__ == "__main__":
 
 	# Żyjący program robimy, bez default configa
 	#LOG.load_logs_gathering_config_from_file()
+<<<<<<< HEAD
+=======
 	
 	# 
+>>>>>>> 68bf27564d1b9984a824535a016ad03bed32ce04
 	#LOG.search_add_new_logs(ask=True) # ...
 	#LOG.quick_logs_gatherer()
 
 	# Guardians:
+<<<<<<< HEAD
+	LOG.create_guardians()
+	LOG.create_reviver()
+=======
 	LOG.things_to_watch_list()
 	LOG.create_guardians()
 	LOG.create_reviver()
 	print(LOG.things_to_watch)
 	
+>>>>>>> 68bf27564d1b9984a824535a016ad03bed32ce04
