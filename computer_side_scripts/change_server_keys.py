@@ -8,6 +8,11 @@ from paramiko import SSHConfig
 '''
 Create / change your RSA key pair and blocks loging in by a password.
 
+PS: On Windows just open powershell and see this shining commands:
+ssh-keygen -t rsa -b 4096 -N "" -f <key-name>
+ssh-copy-id <name>@<ip> -f
+Will create key for you to use it. Update config file with a key as shown in lines 25-33
+
 
 Create keys requirements:
 1. Server with user with password
