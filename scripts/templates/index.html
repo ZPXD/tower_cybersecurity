@@ -1,0 +1,108 @@
+<br>
+<br>
+<br>
+<br>
+<p>{{session['b']}}</p>
+<p>{{session['a']}}</p>
+<br>
+<br>
+<br>
+<br>
+
+<form method="post" style='text-align:center'>
+
+    {{ form_level_1.csrf_token() }}
+
+    <br>
+    <br>
+    <h2>1. Tekst:</h2>
+    <br>
+
+    <p><b>Tekst krótki:</b></p>
+    {{ form_level_1.tekst_krotki(size=30, maxlength=50) }}
+    
+    <p><b>Tekst długi:</b></p>
+    {{ form_level_1.tekst_dlugi(size=30, maxlength=50) }}
+
+    <p><b>Tekst wieloliniowy:</b></p>
+    {{ form_level_1.tekst_wieloliniowy(rows=30, cols=50) }}
+
+    <br>
+    <br>
+    <h2>2. Tekst specjalny:</h2>
+    <br>
+
+    <p><b>Tekst - Hasło:</b></p>
+    {{ form_level_1.wyszukiwanie }}
+
+    <p><b>Tekst - Hasło 2 raz:</b></p>
+    {{ form_level_1.haslo_drugi_raz }}
+
+    <p><b>Tekst - Email:</b></p>
+    {{ form_level_1.email }}
+
+    <p><b>Tekst - Link www:</b></p>
+    {{ form_level_1.link_www }}
+
+    <br>
+    <br>
+    <p><b>3. Czas</b></p>
+    <br>
+
+    <p><b>Czas - data </b></p>
+    {{ form_level_1.data }}
+
+    <p><b>Czas - data po stronie gościa</b></p>
+    {{ form_level_1.data_goscia }}
+
+    <p><b>Czas - dzień</b></p>
+    {{ form_level_1.dzien }}
+
+    <p><b>Czas - godzina</b></p>
+    {{ form_level_1.godzina }}
+
+    <br>
+    <br>
+    <p><b>4. Wybór</b></p>
+    <br>
+
+    {# 
+    <p><b>Wybór A/B</b></p>
+    {{ form_level_1.wybor_ab }}
+    #}
+
+    <br>
+    <br>
+
+    <p><b>Wybór akcji/braku:</b></p>
+    {{ form_level_1.ok }}
+
+</form>
+
+
+<br>
+<h2>Level 2</h2>
+<br>
+<br>
+<br>
+<br>
+
+<form method="post">
+    <p><b>Tekst - Telefon</b></p>
+    {{ form_level_2.x }}
+
+    <p><b>Tekst - IP:</b></p>
+    {{ form_level_2.x }}
+
+    <p>Połącz w całość trzy kawałki nazwy - jedna jest na samej górze a druga na samym dole tej strony a trzecia to sam napisz gdzie.</p>
+    {{ form_level_2.x }}
+
+    <p><b>Ok</b></p>
+    {{ form_level_2.ok }}
+</form>
+
+
+<br>
+<br>
+<p>{{session['c']}}</p>
+<br>
