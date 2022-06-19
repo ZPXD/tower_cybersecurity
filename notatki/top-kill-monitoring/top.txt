@@ -1,0 +1,39 @@
+# TOP reserch top.txt
+# alternatywnie glances.txt - alternatywa top napisana w pythonie
+
+### UZYCIE
+przykłady
+https://www.geeksforgeeks.org/top-command-in-linux-with-examples/
+
+strace - podgląd jakie pliki otwiera dany proces czyli np interesujący nas top
+https://stackoverflow.com/questions/3371131/need-the-source-code-for-top-and-find-the-connection-between-top-and-proc-dire
+
+procps - np podejrzenie w top konkretnego procesu
+https://opensource.com/article/21/8/linux-procps-ng
+https://www.mankier.com/1/top
+ciekawa komenda
+top -p $(pgrep -d ',' process_name)
+użycie naprzykład:
+top -p $(pgrep -d ',' nginx)
+
+Nie wiem czy jest sens brnąć w dalszy research w tym kierunku ale
+przykładowe komendy które można kolejno puścić w terminalu poniżej, z programów wychodzimy naciskając q:
+sudo su
+top -d 1
+top -d 5
+top -d 5 >> toptxt.txt
+ll
+nano toptxt.txt
+strace -e open top
+strace -e open top >> starce.txt
+ll
+nano strace.txt
+strace top | grep open
+
+### CIEKAWOSTKI
+
+źródła kodu top - napisane w C raczej jako ciekawostka
+z repo trovaldsa
+https://github.com/torvalds/linux/blob/master/tools/perf/builtin-top.c
+interaktywne
+https://elixir.bootlin.com/linux/latest/source/tools/perf/builtin-top.c

@@ -1,0 +1,7 @@
+### glances  reserch glances.txt
+
+Opis co i jak
+https://www.tecmint.com/glances-an-advanced-real-time-system-monitoring-tool-for-linux/
+
+kod źródłowy
+https://github.com/nicolargo/glances
