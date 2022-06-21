@@ -5,5 +5,5 @@ https://www.tecmint.com/glances-an-advanced-real-time-system-monitoring-tool-for
 
 kod źródłowy
 https://github.com/nicolargo/glances
-analizę możnaby zacząc od np pierwszej wersji
+analizę możnaby zacząc najlepiej od np pierwszej wersji
 https://github.com/nicolargo/glances/tree/v1.0
