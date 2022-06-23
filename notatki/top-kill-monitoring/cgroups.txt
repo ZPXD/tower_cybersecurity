@@ -1,0 +1,4 @@
+### cgroups research cgroups.txt
+
+
+https://scoutapm.com/blog/restricting-process-cpu-usage-using-nice-cpulimit-and-cgroups
